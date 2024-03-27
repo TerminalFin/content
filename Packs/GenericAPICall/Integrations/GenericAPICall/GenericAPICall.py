@@ -230,8 +230,8 @@ def api_call_command(client: Client):
     outputs = build_outputs(parsed_res, res)
 
     return CommandResults(
-        readable_output=f"Sent a {method} request to {client._base_url + url_path}",
-        outputs_prefix='HttpRequest.Response',
+        readable_output=f"Sent a {method} request to {client._base_url}",
+        outputs_prefix='APICall',
         outputs=outputs,
         raw_response={'data': parsed_res}
     )

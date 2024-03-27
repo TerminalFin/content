@@ -23,35 +23,36 @@ configuration:
     displaypassword: API Key
     hiddenusername: false
   - name: apikey_is_in_header
-    display: 'Is the API key provided in the call header (Default: true)'
+    display: "Is the API key provided in the call header (Default: true)"
     required: false
-    defaultvalue: 'true'
+    defaultvalue: "true"
     type: 8
     additionalinfo: >-
-      Is the API key used for each call provided in the header or as a parameter?
+      Is the API key used for each call provided in the header or as a
+      parameter?
 
       Default it set to true (key is provided in header). Unchecking this will pass the API key as a call parameter
   - name: api_call_key
-    display: 'Specify the key to use when passing the API key as a header or parameter value'
+    display: Specify the key to use when passing the API key as a header or
+      parameter value
     required: false
-    defaultvalue: ''
+    defaultvalue: null
     type: 0
     additionalinfo: >-
-      Specify the key to use when passing the API key as a header of parameter value.
+      Specify the key to use when passing the API key as a header of parameter
+      value.
 
-      e.g., X-PAN-KEY: API_KEY_HERE (X-PAN-KEY is the value specified in this call)
-      - For a parameterized call, this would be appended to the URL as &X-PAN-KEY=KEY_HERE
-      - For a header-based call, this would appear in the header as 'X-PAN-KEY': KEY_HERE
+      e.g., X-PAN-KEY: API_KEY_HERE (X-PAN-KEY is the value specified in this call) - For a parameterized call, this would be appended to the URL as &X-PAN-KEY=KEY_HERE - For a header-based call, this would appear in the header as 'X-PAN-KEY': KEY_HERE
   - name: proxy
     display: Use system proxy settings
     required: false
-    defaultvalue: 'true'
+    defaultvalue: "true"
     type: 8
     additionalinfo: ""
   - name: insecure
     display: Trust any certificate (not secure)
     required: false
-    defaultvalue: 'true'
+    defaultvalue: "true"
     type: 8
     additionalinfo: null
 description: >-
@@ -217,7 +218,25 @@ script:
           defaultValue: "3"
           predefined:
             - ""
-      outputs: []
+      outputs:
+        - contextPath: APICall.StatusCode
+          description: The number that indicates the status of the request
+          type: String
+        - contextPath: APICall.StatusText
+          description: The text corresponding to the status code
+          type: String
+        - contextPath: APICall.URL
+          description: The URL of the response
+          type: String
+        - contextPath: APICall.ParsedBody
+          description: The parsed response, according to `parse_response_as` argument
+          type: String
+        - contextPath: APICall.Headers
+          description: The response headers
+          type: String
+        - contextPath: APICall.Body
+          description: The response data
+          type: String
   runonce: false
   script: "-"
   type: python
