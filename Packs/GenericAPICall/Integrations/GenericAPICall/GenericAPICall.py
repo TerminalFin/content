@@ -165,33 +165,35 @@ def parse_headers(headers: str) -> Dict:
 
 
 def api_call_command(client: Client):
-    apikey_in_header = demisto.args().get('apikey_in_header', True)
-    api_call_key = demisto.args().get('api_call_key', '')
     dmst_params = demisto.params()
-    method = dmst_params.get('method', '')
-    body = dmst_params.get('body', '')
-    request_content_type = dmst_params.get('request_content_type', '')
-    response_content_type = dmst_params.get('response_content_type', '')
-    parse_response_as = dmst_params.get('parse_response_as', RAW_RESPONSE)
-    params = dmst_params.get('params', {})
-    headers = dmst_params.get('headers', {})
-    if not api_call_key:
+    apikey_in_header = dmst_params.get('apikey_in_header', True)
+    api_call_key = dmst_params.get('api_call_key', '')
+    is_auth = argToBoolean(dmst_params.get('is_auth', 'False'))
+
+    cmd_args = demisto.args()
+    method = cmd_args.get('method', '')
+    body = cmd_args.get('body', '')
+    request_content_type = cmd_args.get('request_content_type', '')
+    response_content_type = cmd_args.get('response_content_type', '')
+    parse_response_as = cmd_args.get('parse_response_as', RAW_RESPONSE)
+    params = cmd_args.get('params', {})
+    headers = cmd_args.get('headers', {})
+    if not api_call_key and is_auth:
         demisto.error("Parameter/Header key used for API call must be specified")
-    else:
-        if not client._auth:
-            if apikey_in_header:
-                headers.update({api_call_key: demisto.args().get('credentials')['password']})
-            else:
-                params.update({api_call_key: demisto.args().get('credentials')['password']})
-    url_path = dmst_params.get('urlpath', '/')
+    elif is_auth and not client._auth:
+        if apikey_in_header:
+            headers.update({api_call_key: demisto.getParam('credentials')['password']})
+        else:
+            params.update({api_call_key: demisto.getParam('credentials')['password']})
+    url_path = cmd_args.get('urlpath', '/')
     if isinstance(headers, str):
         headers = parse_headers(headers)
     headers = create_headers(headers, request_content_type, response_content_type)
-    save_as_file = dmst_params.get('save_as_file', False)
-    file_name = dmst_params.get('filename', 'http-file')
-    timeout = arg_to_number(dmst_params.get('timeout', 10))
-    timeout_between_retries = dmst_params.get('timeout_between_retries', 5)
-    retry_count = arg_to_number(dmst_params.get('retry_count', 3))
+    save_as_file = argToBoolean(cmd_args.get('save_as_file', False))
+    file_name = cmd_args.get('filename', 'http-file')
+    timeout = arg_to_number(cmd_args.get('timeout', 10))
+    timeout_between_retries = cmd_args.get('timeout_between_retries', 5)
+    retry_count = arg_to_number(cmd_args.get('retry_count', 3))
 
     kwargs = {
         'method': method,
@@ -203,7 +205,7 @@ def api_call_command(client: Client):
         'backoff_factor': timeout_between_retries
     }
 
-    retry_on_status = dmst_params.get('retry_on_status', None)
+    retry_on_status = cmd_args.get('retry_on_status', None)
     raise_on_status = bool(retry_on_status)
     retry_status_list = format_status_list(argToList(retry_on_status))
 
@@ -214,7 +216,7 @@ def api_call_command(client: Client):
             'raise_on_status': raise_on_status
         })
 
-    enable_redirect = argToBoolean(dmst_params.get('enable_redirect', True))
+    enable_redirect = argToBoolean(cmd_args.get('enable_redirect', True))
 
     if not enable_redirect:
         kwargs.update({
@@ -242,24 +244,27 @@ def api_call_command(client: Client):
 
 def main():
     try:
-        args = demisto.args()
+        params = demisto.params()
         results = ''
-        auth = tuple
-        base_url = args.get('base_url', '')
-        creds = args.get('credentials', None)
-        proxy = args.get('proxy', False)
-        verify = args.get('insecure', False)
-
-        if 'identifier' in creds and not creds['identifier']:
-            auth = None  # type: ignore
-        else:
-            auth = tuple(creds.values())  # type: ignore
-
-        client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
+        auth = ''
+        base_url = params.get('base_url', '')
+        is_auth = params.get('is_auth', True)
+        creds = params.get('credentials', '')
+        proxy = params.get('proxy', False)
+        verify = not params.get('insecure', True)
 
         command = demisto.command()
 
-        if command == 'apiCall':
+        if command == 'generic-api-call':
+            # API Key auth
+            if ('identifier' in creds and not creds['identifier']) or not is_auth:
+                auth = tuple('')
+            # Basic auth
+            else:
+                auth = tuple(creds.values())  # type: ignore
+            
+            client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
+            demisto.debug(f'Command being called is {command}')
             results = api_call_command(client)
 
         return_results(results)

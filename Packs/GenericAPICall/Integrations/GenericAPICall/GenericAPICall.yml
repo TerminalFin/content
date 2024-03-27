@@ -10,7 +10,7 @@ configuration:
     type: 0
     additionalinfo: null
   - name: credentials
-    display: <Use PASSWORD field for API key - Only use Username field with Basic Auth>
+    display: Leave blank for API key use - Only complete field when using Basic Auth
     required: false
     defaultvalue: null
     type: 9
@@ -22,8 +22,15 @@ configuration:
       For API key authorization, fill in the password field only or use only the password field in a credential object. 
     displaypassword: API Key
     hiddenusername: false
-  - name: apikey_is_in_header
-    display: "Is the API key provided in the call header (Default: true)"
+  - name: is_auth
+    display: "Does this API call require authentication (Default: False)"
+    required: false
+    defaultvalue: "false"
+    type: 8
+    additionalinfo: >-
+      Does this API call require authentication (Basic, API key, etc.)?
+  - name: apikey_in_header
+    display: "Is the API key supplied in the call header (Default: true)"
     required: false
     defaultvalue: "true"
     type: 8
