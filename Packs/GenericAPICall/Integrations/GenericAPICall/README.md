@@ -73,7 +73,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - JSON ###
 #### API call with output to context - JSON Return ####
-`!generic-api-call urlpath='/metrics.json' request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
+`!generic-api-call urlpath=/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
 #### Context Example ####
 ![JSON Context Output - 1](./../../doc_files/json_context_output_1.png)
 ![JSON Context Output - 2](./../../doc_files/json_context_output_2.png)
@@ -83,7 +83,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - XML ###
 #### API call with output to context - XML Return ####
-`!generic-api-call urlpath=/search?search=civilizations method=GET request_content_type=application/xml response_content_type=application/xml parse_response_as=xml`
+`!generic-api-call urlpath=/xmlapi/search?search=civilizations method=GET request_content_type=application/xml response_content_type=application/xml parse_response_as=xml`
 #### Context Example ####
 ![XML Context Output - 1](./../../doc_files/xml_context_output_1.png)
 ![XML Context Output - 2](./../../doc_files/xml_context_output_2.png)
