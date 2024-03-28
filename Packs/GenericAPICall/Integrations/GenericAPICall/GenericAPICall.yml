@@ -30,15 +30,15 @@ configuration:
     additionalinfo: >-
       Does this API call require authentication (Basic, API key, etc.)?
   - name: apikey_in_header
-    display: "API Key supplied in header (Default: true)"
+    display: "API Key supplied in header"
     required: false
-    defaultvalue: "true"
+    defaultvalue: "false"
     type: 8
     additionalinfo: >-
       Is the API key used for each call provided in the header or as a
       parameter?
 
-      Default it set to true (key is provided in header). Unchecking this will pass the API key as a call parameter
+      Default it set to false (key is provided as a parameter). Unchecking this will pass the API key as a call header
   - name: api_call_key
     display: Authentication Header
     required: false
@@ -97,8 +97,6 @@ script:
           required: true
           isArray: false
           defaultValue: /
-          predefined:
-            - ""
         - name: parse_response_as
           description: Specify the type of data expected in the API response
           required: true
@@ -115,8 +113,16 @@ script:
           required: false
           isArray: false
           defaultValue: ""
-          predefined:
-            - ""
+          additionalinfo: >-
+            Example JSON request body sent to the API endpoint:
+            {
+              "name": "xsoar",
+              "title": "XSOAR Ninja"
+            }
+
+            When supplying this parameter via the CLI and not a playbook task, make sure
+            to enclose the JSON body in back ticks (`{JSON_BODY_HERE}`) to avoid escaping
+            issues that may arise with special characters.
         - name: request_content_type
           description: "Specify the Content-Type header for the request.Shorthands are
             provided for the following common content types:json
@@ -162,8 +168,6 @@ script:
           required: false
           isArray: false
           defaultValue: ""
-          predefined:
-            - ""
         - name: save_as_file
           description: "Save the response in a file (Default: false)."
           required: false
@@ -178,39 +182,29 @@ script:
           required: false
           isArray: false
           defaultValue: ""
-          predefined:
-            - ""
         - name: timeout
           description: Specify the timeout of the HTTP request in seconds. Defaults to 10
             seconds.
           required: false
           isArray: false
           defaultValue: "10"
-          predefined:
-            - ""
         - name: timeout_between_retries
           description: Specify the timeout between each retry in seconds. Defaults to 5.
           required: false
           isArray: false
           defaultValue: "5"
-          predefined:
-            - ""
         - name: retry_count
           description: Specify the number or retries to be made in case of a failure.
             Defaults to 3.
           required: false
           isArray: false
           defaultValue: "3"
-          predefined:
-            - ""
         - name: retry_on_status
           description: "Specify the array of status codes that should cause a retry. For
             example: 301-303,400,402."
           required: false
           isArray: false
           defaultValue: ""
-          predefined:
-            - ""
         - name: enable_redirect
           description: "The request will be called again with the new URL (Default: false)"
           required: false
@@ -226,8 +220,6 @@ script:
           required: false
           isArray: false
           defaultValue: "3"
-          predefined:
-            - ""
       outputs:
         - contextPath: APICall.StatusCode
           description: The number that indicates the status of the request

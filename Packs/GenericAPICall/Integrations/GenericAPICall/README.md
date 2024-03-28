@@ -69,6 +69,8 @@ All examples in this documentation are based off the following endpoints:
 
 **JSON**: https[:]//api[.]apis[.]guru/v2/metrics.json
 **XML**: https[:]//boardgamegeek[.]com/xmlapi/search?search=civilizations
+**JSON Request Body**: https[:]//reqres[.]in/
+
 ### Command example - JSON ###
 #### API call with output to context - JSON Return ####
 `!generic-api-call urlpath='/metrics.json' request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
@@ -97,3 +99,12 @@ All examples in this documentation are based off the following endpoints:
 
 #### Human Readable Output ####
 ![File output - War Room](./../../doc_files/file_output_war_room.png)
+
+### Command example - API Call with JSON Request Body ###
+#### API call with output to context - JSON specified in request body ####
+``!generic-api-call response_content_type=application/json method=POST urlpath=/api/users parse_response_as=json body=`{"name": "xsoar", "job": "XSOAR Ninja"}` request_content_type=application/json``
+#### Output Example ####
+![JSON Request Body Output Example](./../../doc_files/json_request_body_output.png)
+
+#### Human Readable Output ####
+`Sent a POST request to https://reqres.in`
