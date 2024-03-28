@@ -73,7 +73,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - JSON ###
 #### API call with output to context - JSON Return ####
-`!generic-api-call urlpath=/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
+`!generic-api-call urlpath=/v2/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
 #### Context Example ####
 ![JSON Context Output - 1](./../../doc_files/json_context_output_1.png)
 ![JSON Context Output - 2](./../../doc_files/json_context_output_2.png)
@@ -93,7 +93,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - Saving output to file in war room/context ###
 #### Saving output to file in context/war room ####
-`!generic-api-call urlpath=/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json save_as_file=true`
+`!generic-api-call urlpath=/v2/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json save_as_file=true`
 #### Context Example ####
 ![File output - Context](./../../doc_files/file_output_context.png)
 
