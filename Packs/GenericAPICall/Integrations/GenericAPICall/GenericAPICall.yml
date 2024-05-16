@@ -214,12 +214,6 @@ script:
           predefined:
             - true
             - false
-        - name: retry_count
-          description: Specify the number or retries to be made in case of a failure.
-            Defaults to 3.
-          required: false
-          isArray: false
-          defaultValue: "3"
       outputs:
         - contextPath: APICall.StatusCode
           description: The number that indicates the status of the request

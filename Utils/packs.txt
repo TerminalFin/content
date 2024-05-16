@@ -1,0 +1,36 @@
+Ansible Automation Platform
+Ansible Azure
+Ansible Cisco IOS
+Ansible Cisco NXOS
+Ansible Kubernetes
+Ansible Linux
+Ansible Microsoft Windows
+Ansible VMware
+Atlassian Jira
+Base
+Common Dashboards
+Common Playbooks
+Common Reports
+Common Scripts
+Common Types
+Common Widgets
+Generic Export Indicators Service
+GenericSQL
+Microsoft 365 Defender
+Microsoft Endpoint Configuration Manager
+Microsoft Exchange Online
+Microsoft Graph API
+Microsoft Graph Files
+Microsoft Graph Identity and Access
+Microsoft Graph Mail
+Microsoft Graph Search
+Microsoft Graph Security
+MicrosoftGraphTeams
+Microsoft Sentinel
+MicrosoftWSUS
+Netmiko
+Rasterize
+Syslog
+TAXII Feed
+TAXII Server
+XSOAR CI/CD

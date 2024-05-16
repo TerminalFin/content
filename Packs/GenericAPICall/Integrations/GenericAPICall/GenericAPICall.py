@@ -4,7 +4,6 @@ from CommonServerPython import *  # noqa: F401
 import urllib3
 import requests
 import json
-# from typing import Dict, Any
 
 # Disable insecure warnings
 urllib3.disable_warnings()
@@ -182,9 +181,9 @@ def api_call_command(client: Client):
         demisto.error("Parameter/Header key used for API call must be specified")
     elif is_auth and not client._auth:
         if apikey_in_header:
-            headers.update({api_call_key: demisto.getParam('credentials')['password']})
+            headers.update({api_call_key: dmst_params['credentials']['password']})
         else:
-            params.update({api_call_key: demisto.getParam('credentials')['password']})
+            params.update({api_call_key: dmst_params['credentials']['password']})
     url_path = cmd_args.get('urlpath', '/')
     if isinstance(headers, str):
         headers = parse_headers(headers)
@@ -248,7 +247,6 @@ def main():
         results = ''
         auth = ''
         base_url = params.get('base_url', '')
-        is_auth = params.get('is_auth', True)
         creds = params.get('credentials', '')
         proxy = params.get('proxy', False)
         verify = not params.get('insecure', True)
@@ -256,12 +254,12 @@ def main():
         command = demisto.command()
 
         if command == 'generic-api-call':
-            # API Key auth
-            if ('identifier' in creds and not creds['identifier']) or not is_auth:
+            # Credentials object or hardcoded API key (Empty username field) in integration config
+            if 'credentials' in creds and (isinstance(creds['credentials'], dict) or creds['identifier']):
                 auth = tuple('')
-            # Basic auth
+            # HTTP Basic auth
             else:
-                auth = tuple(creds.values())  # type: ignore
+                auth = tuple(creds.values)
             
             client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
             demisto.debug(f'Command being called is {command}')
