@@ -73,7 +73,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - JSON ###
 #### API call with output to context - JSON Return ####
-`!generic-api-call urlpath=/v2/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
+`!generic-api-call urlpath=/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json`
 #### Context Example ####
 ![JSON Context Output - 1](./../../doc_files/json_context_output_1.png)
 ![JSON Context Output - 2](./../../doc_files/json_context_output_2.png)
@@ -93,7 +93,7 @@ All examples in this documentation are based off the following endpoints:
 
 ### Command example - Saving output to file in war room/context ###
 #### Saving output to file in context/war room ####
-`!generic-api-call urlpath=/v2/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json save_as_file=true`
+`!generic-api-call urlpath=/metrics.json request_content_type=application/json response_content_type=application/json method=GET parse_response_as=json save_as_file=true`
 #### Context Example ####
 ![File output - Context](./../../doc_files/file_output_context.png)
 
@@ -108,3 +108,19 @@ All examples in this documentation are based off the following endpoints:
 
 #### Human Readable Output ####
 `Sent a POST request to https://reqres.in`
+
+### Command example - ElasticSearch Cases API Call ###
+As the current ElasticSearch integration does not support pulling case data, the Generic API Call integration can be used to perform such a data pull. In the below example, a generic API call is issued to pull back a list of cases in ElasticSearch tied to the [Elastic Cases API](https://www.elastic.co/guide/en/kibana/current/cases-api.html). Below are screenshots showing how the integration is configured to authenticate to ElasticSearch. 
+
+Please make note of the way the API key and authorization header are specified. For the API key, [Elastic uses](https://www.elastic.co/guide/en/cloud/current/ec-api-authentication.html) the "Authorization" header with an API key formatted as "ApiKey ENCODED_KEY_HERE". The "ApiKey ENCODED_KEY_HERE" text goes in the **password field** for the integration, while "Authorization" is specified in the "**Authentication Header**" integration instance configuration field. The **USERNAME** field is left blank in the integration configuration for a call to the ElasticSearch API endpoint. 
+
+![GenericAPICall Integration Configuration for ElasticSearch Cases](./../../doc_files/Elastic_Generic_Call_Config.png)
+
+
+#### API call with output to context - ElasticSearch Cases API ####
+``!generic-api-call method=GET parse_response_as=json enable_redirect=true urlpath=/_find"``
+#### Context Example ####
+![Elastic Generic API Call Context Output](./../../doc_files/Elastic_Generic_Call_Context_Output.png)
+
+#### Human Readable Output ####
+`Sent a GET request to https://X.X.X.X/api/cases`
