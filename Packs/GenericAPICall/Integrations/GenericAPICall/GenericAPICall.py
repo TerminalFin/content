@@ -254,12 +254,13 @@ def main():
         command = demisto.command()
 
         if command == 'generic-api-call':
-            # Credentials object or hardcoded API key (Empty username field) in integration config
-            if 'credentials' in creds and (isinstance(creds['credentials'], dict) or creds['identifier']):
+            # Credentials object or hardcoded API key (Empty username field) in integration config,
+            # or empty creds (not authenticated)
+            if ('credentials' in creds and (isinstance(creds['credentials'], dict) or creds['identifier'])) or not creds:
                 auth = tuple('')
             # HTTP Basic auth
             else:
-                auth = tuple(creds.values)
+                auth = tuple(creds.values())
             
             client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
             demisto.debug(f'Command being called is {command}')
