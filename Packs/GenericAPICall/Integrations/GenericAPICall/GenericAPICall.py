@@ -179,11 +179,11 @@ def api_call_command(client: Client):
     headers = cmd_args.get('headers', {})
     if not api_call_key and is_auth:
         demisto.error("Parameter/Header key used for API call must be specified")
-    elif is_auth and not client._auth:
+    elif is_auth:
         if apikey_in_header:
-            headers.update({api_call_key: dmst_params['credentials']['password']})
+            headers.update({api_call_key: demisto.getParam('credentials')['password']})
         else:
-            params.update({api_call_key: dmst_params['credentials']['password']})
+            params.update({api_call_key: demisto.getParam('credentials')['password']})
     url_path = cmd_args.get('urlpath', '/')
     if isinstance(headers, str):
         headers = parse_headers(headers)
@@ -247,6 +247,7 @@ def main():
         results = ''
         auth = ''
         base_url = params.get('base_url', '')
+        is_auth = params.get('is_auth', True)
         creds = params.get('credentials', '')
         proxy = params.get('proxy', False)
         verify = not params.get('insecure', True)
@@ -254,15 +255,18 @@ def main():
         command = demisto.command()
 
         if command == 'generic-api-call':
-            # Credentials object or hardcoded API key (Empty username field) in integration config,
-            # or empty creds (not authenticated)
-            if ('credentials' in creds and (isinstance(creds['credentials'], dict) or creds['identifier'])) or not creds:
-                auth = tuple('')
-            # HTTP Basic auth
-            else:
-                auth = tuple(creds.values())
-            
+
+            # Credential object - API Key or HTTP Basic Auth
+            if 'credentials' in creds and creds['credentials']['name']:
+                auth = (creds['credentials']['user'], creds['credentials']['password'])
+            # Creds configured in integration instance
+            elif 'credentials' not in creds:
+                auth = (creds['identifier'], creds['password'])
+            elif not is_auth:
+                auth = ()
+
             client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
+
             demisto.debug(f'Command being called is {command}')
             results = api_call_command(client)
 
