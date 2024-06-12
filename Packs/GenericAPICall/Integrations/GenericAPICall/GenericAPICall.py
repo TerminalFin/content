@@ -256,13 +256,14 @@ def main():
 
         if command == 'generic-api-call':
 
-            # Credential object - API Key or HTTP Basic Auth
-            if 'credentials' in creds and creds['credentials']['name']:
-                auth = (creds['credentials']['user'], creds['credentials']['password'])
-            # Creds configured in integration instance
-            elif 'credentials' not in creds:
-                auth = (creds['identifier'], creds['password'])
-            elif not is_auth:
+            if is_auth:
+                # Credential object - API Key or HTTP Basic Auth
+                if 'credentials' in creds and creds['credentials']['name']:
+                    auth = (creds['credentials']['user'], creds['credentials']['password'])
+                # Creds configured in integration instance
+                elif 'credentials' not in creds:
+                    auth = (creds['identifier'], creds['password'])
+            else:
                 auth = ()
 
             client = Client(base_url, auth=auth, verify=verify, proxy=proxy)
